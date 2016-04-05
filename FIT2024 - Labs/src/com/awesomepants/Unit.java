@@ -8,13 +8,23 @@ import java.util.*;
 public class Unit {
     private String code;
     private String name;
+    private Staff chiefExaminer;
     private HashMap<Integer, Student> enrolledStudents = new HashMap<>();
     private AssessmentScheme assessmentScheme;
-    public Unit(String code, String name, AssessmentScheme assessmentScheme)
+    public Unit(String code, String name, AssessmentScheme assessmentScheme, Staff chiefExaminer)
     {
+        setChiefExaminer(chiefExaminer);
         this.code = code;
         this.name = name;
         this.assessmentScheme = assessmentScheme;
+    }
+
+    public Staff getChiefExaminer() {
+        return chiefExaminer;
+    }
+
+    public void setChiefExaminer(Staff chiefExaminer) {
+        this.chiefExaminer = chiefExaminer;
     }
 
     public String getCode() {
@@ -47,6 +57,8 @@ public class Unit {
     {
         StringJoiner newLineJoiner = new StringJoiner("\n");
         newLineJoiner.add(String.join(" ", code, name));
+        newLineJoiner.add("Chief examiner: ");
+        newLineJoiner.add(chiefExaminer.getDescription());
         newLineJoiner.add("Enrolled Students: ");
         Iterator<Map.Entry<Integer, Student>> i = enrolledStudents.entrySet().iterator();
         while(i.hasNext())

@@ -1,5 +1,6 @@
 package com.awesomepants;
 
+import com.sun.corba.se.impl.io.TypeMismatchException;
 import org.w3c.dom.ranges.RangeException;
 
 import java.io.BufferedReader;
@@ -39,32 +40,35 @@ public class University {
         createTestUnits();
     }
     private void createTestUnits() {
-
         Unit unit = new Unit("FIT2024", "Software Engineering Practice", new AssessmentScheme(
                 new Assignment(40, "Assignment 1"),
                 new Exam(60, 260)
-        ));
+        ), getStaff(4));
 
         try {
 
             new Unit("FIT2024", "Software Engineering Practice", new AssessmentScheme(
                     new Assignment(40, "Assignment 1"),
                     new Exam(60, -1)
-            ));
+            ), getStaff(5));
         }
         catch(Exception  ex){ex.printStackTrace();}
         try {
 
             new Unit("FIT2024", "Software Engineering Practice", new AssessmentScheme(
                     new Assignment(101, "Assignment 1")
-            ));
+            ),
+                    getStaff(4));
         }
         catch(Exception  ex){ex.printStackTrace();}
         try {
 
-            new Unit("FIT2024", "Software Engineering Practice", new AssessmentScheme(
-                    new Assignment(40, "Assignment 1")
-            ));
+            new Unit("FIT2024", "Software Engineering Practice",
+                    new AssessmentScheme(
+                            new Assignment(40, "Assignment 1")
+                    ),
+                    getStaff(5)
+            );
         }
         catch(Exception  ex){ex.printStackTrace();}
         try {
@@ -72,7 +76,8 @@ public class University {
                     new Assignment(40, "Assignment 1"),
                     new Assignment(40, "Assignment 2"),
                     new Assignment(40, "Assignment 3")
-            ));
+            ),
+                    getStaff(4));
 
         }
         catch(Exception  ex){ex.printStackTrace();}
@@ -84,14 +89,16 @@ public class University {
         unit = new Unit("FIT1008", "Introduction to Computer Science", new AssessmentScheme(
                 new Assignment(40, "Assignment 1"),
                 new Exam(60, 160)
-        ));
+        ),
+                getStaff(4));
         unit.enrolStudent(getStudent(0));
         units.add(unit);
 
         unit = new Unit("FIT1010", "Introduction to Software Engineering", new AssessmentScheme(
                 new Assignment(40, "Assignment 1"),
                 new Exam(60, 60)
-        ));
+        ),
+                getStaff(3));
         unit.enrolStudent(getStudent(1));
         unit.enrolStudent(getStudent(2));
         units.add(unit);
@@ -101,7 +108,8 @@ public class University {
         Unit testUnit = new Unit("FIT1337", "Enrolment test unit", new AssessmentScheme(
                 new Assignment(40, "Assignment 1"),
                 new Exam(60, 180)
-        ));
+        ),
+                getStaff(4));
         Student testStudent = new Student(1231030, "Test", "Student");
 
         Tester.assertEqual(testUnit.isEnrolled(testStudent), false);
@@ -123,6 +131,14 @@ public class University {
         if(students.get(student.getStudentID()) != null){ throw new DuplicationException("Student ID " + Integer.toString(student.getStudentID()) + " already exists within the database."); }
         students.put(student.getStudentID(), student);
     }
+    public Staff getStaff(int staffId)
+    {
+        if(!(students.get(staffId) instanceof Staff))
+        {
+            throw new TypeMismatchException("Not a staff member");
+        }
+        return (Staff)students.get(staffId);
+    }
     private Student getStudent(int studentID)
     {
         return students.get(studentID);
@@ -137,12 +153,19 @@ public class University {
             addStudent(new Student(0, "John", "Smith"));
             addStudent(new Student(1, "Awesome", "Person"));
             addStudent(new Student(2));
+            addStaff(new Staff(3,"Chief", "Lastname", 120, "0434969841"));
+            addStaff(new Staff(4, "Chief2", "Lastname", 121, "0434969812"));
+            addStaff(new Staff(5, "Chief32", "Lastname", 122, "0434969842"));
         }
         catch(DuplicationException ex)
         {
             System.out.println(ex.getMessage());
             ex.printStackTrace();
         }
+    }
+    private void addStaff(Staff staffMember) throws DuplicationException
+    {
+        addStudent(staffMember);
     }
     private void displayUnits()
     {
@@ -174,7 +197,7 @@ public class University {
         {
             String unitCode = readNonNullString(in, "Please enter the unit code");
             String unitName = readNonNullString(in, "Please enter the unit name");
-            addUnit(new Unit(unitCode, unitName, new AssessmentScheme(new Exam(100,60))));
+            addUnit(new Unit(unitCode, unitName, new AssessmentScheme(new Exam(100,60)),getStaff(4)));
             String addMoreUnitsInput = readExplicitOptionsString(in,"Would you like to add more units? (y/n)", new String[]{"y", "n"});
             if(addMoreUnitsInput.equals("n"))
             {
