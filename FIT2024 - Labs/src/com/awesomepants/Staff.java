@@ -31,7 +31,7 @@ public class Staff extends Student {
     }
     public void setPhoneNumber(String phoneNumber) throws Exception
     {
-        if(phoneNumber.length() != 8 || phoneNumber.length() != 10)
+        if(phoneNumber.length() != 8 && phoneNumber.length() != 10)
         {
             throw new Exception("Phone numbers must only be 8 or 10 digits long. Not " + Integer.toString(phoneNumber.length()));
         }

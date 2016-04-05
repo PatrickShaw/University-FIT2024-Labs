@@ -3,11 +3,14 @@ package com.awesomepants;
 import org.w3c.dom.ranges.Range;
 import org.w3c.dom.ranges.RangeException;
 
+import java.util.HashMap;
+
 /**
  * Created by eastd on 22/03/2016.
  */
 public abstract class Assessment {
     private int weight;
+    private HashMap<Integer, Mark> studentMarks = new HashMap<>();
     public Assessment(int weight) throws RangeException
     {
         setWeight(weight);
@@ -24,4 +27,5 @@ public abstract class Assessment {
         this.weight = weight;
     }
     public abstract String description();
+
 }

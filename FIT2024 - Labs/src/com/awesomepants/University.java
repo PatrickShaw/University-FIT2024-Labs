@@ -153,9 +153,15 @@ public class University {
             addStudent(new Student(0, "John", "Smith"));
             addStudent(new Student(1, "Awesome", "Person"));
             addStudent(new Student(2));
-            addStaff(new Staff(3,"Chief", "Lastname", 120, "0434969841"));
-            addStaff(new Staff(4, "Chief2", "Lastname", 121, "0434969812"));
-            addStaff(new Staff(5, "Chief32", "Lastname", 122, "0434969842"));
+            try {
+                addStaff(new Staff(3, "Chief", "Lastname", 120, "0434969841"));
+                addStaff(new Staff(4, "Chief2", "Lastname", 121, "0434969812"));
+                addStaff(new Staff(5, "Chief32", "Lastname", 122, "0434969842"));
+            }
+            catch(Exception ex)
+            {
+                ex.printStackTrace();
+            }
         }
         catch(DuplicationException ex)
         {
