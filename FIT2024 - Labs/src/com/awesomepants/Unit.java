@@ -1,5 +1,9 @@
 package com.awesomepants;
 
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import org.w3c.dom.ranges.RangeException;
+
+import java.text.MessageFormat;
 import java.util.*;
 
 /**
@@ -11,10 +15,10 @@ public class Unit {
     private Staff chiefExaminer;
     private HashMap<Integer, Student> enrolledStudents = new HashMap<>();
     private AssessmentScheme assessmentScheme;
-    public Unit(String code, String name, AssessmentScheme assessmentScheme, Staff chiefExaminer)
+    public Unit(String code, String name, AssessmentScheme assessmentScheme, Staff chiefExaminer) throws Exception
     {
         setChiefExaminer(chiefExaminer);
-        this.code = code;
+        setCode(code);
         this.name = name;
         this.assessmentScheme = assessmentScheme;
     }
@@ -31,7 +35,17 @@ public class Unit {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(String code) throws Exception {
+        if(code == null)
+            throw new NullPointerException("Codes cannot be null");
+        if(code.length() != 7)
+            throw new RangeException((short)123, "Codes must be of length 7");
+        for(int i = 0 ; i<=2; i++)
+            if(!Character.isAlphabetic(code.charAt(i)))
+                throw new IllegalArgumentException("Codes must be of format: 3 letters followed by 4 numbers");
+        for(int i = 3 ; i<=6; i++)
+            if(!Character.isDigit(code.charAt(i)))
+                throw new IllegalArgumentException("Codes must be of format: 3 letters followed by 4 numbers");
         this.code = code;
     }
 
@@ -53,6 +67,14 @@ public class Unit {
         this.assessmentScheme = assessmentScheme;
     }
 
+    public boolean completedAllAssessments(Student student)
+    {
+        Student enrolledStudent = enrolledStudents.get(student.getStudentID());
+        if(enrolledStudent == null)
+            return false;
+        return assessmentScheme.isFullyMark(enrolledStudent.getStudentID());
+    }
+
     public String description()
     {
         StringJoiner newLineJoiner = new StringJoiner("\n");
@@ -63,15 +85,23 @@ public class Unit {
         Iterator<Map.Entry<Integer, Student>> i = enrolledStudents.entrySet().iterator();
         while(i.hasNext())
         {
-            newLineJoiner.add(i.next().getValue().getDescription());
+            Student student = i.next().getValue();
+            newLineJoiner.add(MessageFormat.format("{0},\nCompleted assessments: {1}",student.getDescription(), completedAllAssessments(student)? "Yes, " + Double.toString(Math.round(getAssessmentScheme().getOverallMark(student.getStudentID()))) + "%" : "No"));
         }
-        newLineJoiner.add("Assessments");
-        Iterator<Assessment> j = assessmentScheme.getAssessments().iterator();
-        while(i.hasNext())
-        {
-            newLineJoiner.add(j.next().description());
-        }
+        newLineJoiner.add(assessmentScheme.toString());
         return newLineJoiner.toString();
+    }
+
+    public void putAssessmentMark(Student student,Mark mark, int assessmentIndex)
+    {
+        if(assessmentScheme.getAssessment(assessmentIndex) == null)
+            throw new NullPointerException("No such assessment found.");
+        // Assumes you can ammend marks after the student is no longer enrolled
+        if(!isEnrolled(student) || assessmentScheme.getAssessment(assessmentIndex).hasMark(student))
+        {
+            throw new ValueException("Student needs to be enrolled in the unit or they need to have a mark for the assessment already.");
+        }
+        assessmentScheme.getAssessment(assessmentIndex).putMark(student, mark);
     }
 
     public void enrolStudent(Student student)

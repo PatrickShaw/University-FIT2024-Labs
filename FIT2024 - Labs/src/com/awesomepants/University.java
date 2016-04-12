@@ -40,91 +40,125 @@ public class University {
         createTestUnits();
     }
     private void createTestUnits() {
-        Unit unit = new Unit("FIT2024", "Software Engineering Practice", new AssessmentScheme(
-                new Assignment(40, "Assignment 1"),
-                new Exam(60, 260)
-        ), getStaff(4));
-
         try {
-
-            new Unit("FIT2024", "Software Engineering Practice", new AssessmentScheme(
+            Unit unit = new Unit("FIT2024", "Software Engineering Practice", new AssessmentScheme(
                     new Assignment(40, "Assignment 1"),
-                    new Exam(60, -1)
-            ), getStaff(5));
-        }
-        catch(Exception  ex){ex.printStackTrace();}
-        try {
+                    new Exam(60, 260)
+            ), getStaff(4));
 
-            new Unit("FIT2024", "Software Engineering Practice", new AssessmentScheme(
-                    new Assignment(101, "Assignment 1")
+            try {
+
+                new Unit("FIT2024", "Software Engineering Practice", new AssessmentScheme(
+                        new Assignment(40, "Assignment 1"),
+                        new Exam(60, -1)
+                ), getStaff(5));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            try {
+
+                new Unit("FIT2024", "Software Engineering Practice", new AssessmentScheme(
+                        new Assignment(101, "Assignment 1")
+                ),
+                        getStaff(4));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            try {
+
+                new Unit("FIT2024", "Software Engineering Practice",
+                        new AssessmentScheme(
+                                new Assignment(40, "Assignment 1")
+                        ),
+                        getStaff(5)
+                );
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            try {
+                new Unit("FIT2024", "Software Engineering Practice", new AssessmentScheme(
+                        new Assignment(40, "Assignment 1"),
+                        new Assignment(40, "Assignment 2"),
+                        new Assignment(40, "Assignment 3")
+                ),
+                        getStaff(4));
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            unit.enrolStudent(getStudent(26898187));
+            unit.enrolStudent(getStudent(12312314));
+            unit.unenrollStudent(getStudent(21231333));
+            try {
+                unit.putAssessmentMark(getStudent(26898187), new Mark(1, "Wow.. you earned 1 mark"), 0);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            units.add(unit);
+
+            unit = new Unit("FIT1008", "Introduction to Computer Science", new AssessmentScheme(
+                    new Assignment(40, "Assignment 1"),
+                    new Exam(60, 160)
             ),
                     getStaff(4));
-        }
-        catch(Exception  ex){ex.printStackTrace();}
-        try {
+            unit.enrolStudent(getStudent(0));
+            try {
+                unit.putAssessmentMark(getStudent(26898187), new Mark(1, "WTF?"), 0);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
-            new Unit("FIT2024", "Software Engineering Practice",
-                    new AssessmentScheme(
-                            new Assignment(40, "Assignment 1")
-                    ),
-                    getStaff(5)
-            );
-        }
-        catch(Exception  ex){ex.printStackTrace();}
-        try {
-            new Unit("FIT2024", "Software Engineering Practice", new AssessmentScheme(
+            units.add(unit);
+
+            unit = new Unit("FIT1010", "Introduction to Software Engineering", new AssessmentScheme(
                     new Assignment(40, "Assignment 1"),
-                    new Assignment(40, "Assignment 2"),
-                    new Assignment(40, "Assignment 3")
+                    new Exam(60, 60)
             ),
-                    getStaff(4));
-
+                    getStaff(3));
+            unit.enrolStudent(getStudent(1));
+            unit.enrolStudent(getStudent(2));
+            try {
+                unit.putAssessmentMark(getStudent(1), new Mark(0, "Did terribly"), 0);
+                unit.putAssessmentMark(getStudent(1), new Mark(60, "Did terribly"), 1);
+                unit.putAssessmentMark(getStudent(0), new Mark(1000, "WTF?"), 0);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            units.add(unit);
         }
-        catch(Exception  ex){ex.printStackTrace();}
-        unit.enrolStudent(getStudent(26898187));
-        unit.enrolStudent(getStudent(12312314));
-        unit.unenrollStudent(getStudent(21231333));
-        units.add(unit);
-
-        unit = new Unit("FIT1008", "Introduction to Computer Science", new AssessmentScheme(
-                new Assignment(40, "Assignment 1"),
-                new Exam(60, 160)
-        ),
-                getStaff(4));
-        unit.enrolStudent(getStudent(0));
-        units.add(unit);
-
-        unit = new Unit("FIT1010", "Introduction to Software Engineering", new AssessmentScheme(
-                new Assignment(40, "Assignment 1"),
-                new Exam(60, 60)
-        ),
-                getStaff(3));
-        unit.enrolStudent(getStudent(1));
-        unit.enrolStudent(getStudent(2));
-        units.add(unit);
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
-    private void testEnrollement()
-    {
-        Unit testUnit = new Unit("FIT1337", "Enrolment test unit", new AssessmentScheme(
-                new Assignment(40, "Assignment 1"),
-                new Exam(60, 180)
-        ),
-                getStaff(4));
-        Student testStudent = new Student(1231030, "Test", "Student");
+    private void testEnrollement() {
+        try {
+            Unit testUnit = new Unit("FIT1337", "Enrolment test unit", new AssessmentScheme(
+                    new Assignment(40, "Assignment 1"),
+                    new Exam(60, 180)
+            ),
+                    getStaff(4));
+            Student testStudent = new Student(1231030, "Test", "Student");
 
-        Tester.assertEqual(testUnit.isEnrolled(testStudent), false);
+            Tester.assertEqual(testUnit.isEnrolled(testStudent), false);
 
-        testUnit.enrolStudent(testStudent);
-        System.out.println(testStudent.getFirstName() + " was added to the test unit");
+            testUnit.enrolStudent(testStudent);
+            System.out.println(testStudent.getFirstName() + " was added to the test unit");
 
-        Tester.assertEqual(testUnit.isEnrolled(testStudent), true);
+            Tester.assertEqual(testUnit.isEnrolled(testStudent), true);
 
-        System.out.println(testStudent.getFirstName() + " was added to the test unit");
-        testUnit.unenrollStudent(testStudent);
-        Tester.assertEqual(testUnit.isEnrolled(testStudent), false);
+            System.out.println(testStudent.getFirstName() + " was added to the test unit");
+            testUnit.unenrollStudent(testStudent);
+            Tester.assertEqual(testUnit.isEnrolled(testStudent), false);
 
-        System.out.println();
-        System.out.println(testUnit.toString());
+            System.out.println();
+            System.out.println(testUnit.toString());
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
     private void addStudent(Student student) throws DuplicationException
     {
@@ -203,7 +237,13 @@ public class University {
         {
             String unitCode = readNonNullString(in, "Please enter the unit code");
             String unitName = readNonNullString(in, "Please enter the unit name");
-            addUnit(new Unit(unitCode, unitName, new AssessmentScheme(new Exam(100,60)),getStaff(4)));
+            try {
+                addUnit(new Unit(unitCode, unitName, new AssessmentScheme(new Exam(100, 60)), getStaff(4)));
+            }
+            catch(Exception ex)
+            {
+                System.out.println(ex.getMessage());
+            }
             String addMoreUnitsInput = readExplicitOptionsString(in,"Would you like to add more units? (y/n)", new String[]{"y", "n"});
             if(addMoreUnitsInput.equals("n"))
             {

@@ -1,17 +1,19 @@
 package com.awesomepants;
 
+import java.text.MessageFormat;
+
 /**
  * Created by eastd on 5/04/2016.
  */
 public class Mark {
-    private int mark;
+    private double mark;
     private String comment;
     public Mark(int mark, String comment) {
-        this.mark = mark;
+        setMark(mark);
         this.comment = comment;
     }
 
-    public int getMark() {
+    public double getMark() {
         return mark;
     }
 
@@ -20,10 +22,14 @@ public class Mark {
     }
 
     public String getComment() {
-        return comment;
+        return comment == null || comment.equals("") ? "-" : comment;
     }
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String description() {
+        return MessageFormat.format("Mark {0}, Comment {1}", Math.round(mark), getComment());
     }
 }

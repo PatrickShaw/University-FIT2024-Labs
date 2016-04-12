@@ -2,6 +2,8 @@ package com.awesomepants;
 
 import org.w3c.dom.ranges.RangeException;
 
+import java.util.StringJoiner;
+
 /**
  * Created by eastd on 22/03/2016.
  */
@@ -17,6 +19,9 @@ public class Assignment extends Assessment {
     }
     @Override
     public String description() {
-        return "Assignment: " + title + ", weight " +  Integer.toString(getWeight()) + "%";
+        StringJoiner sj = new StringJoiner("\n");
+        sj.add("Assignment: " + title + ", weight " +  Integer.toString(getWeight()) + "%");
+        sj.add(super.description());
+        return sj.toString();
     }
 }

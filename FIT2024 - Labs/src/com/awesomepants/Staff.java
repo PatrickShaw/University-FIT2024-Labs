@@ -42,8 +42,9 @@ public class Staff extends Student {
     public String getDescription() {
         String description =  super.getDescription();
         StringJoiner lineJoiner = new StringJoiner("\n");
+        lineJoiner.add(description);
         lineJoiner.add("Room number:\t" + Integer.toString(roomNumber));
         lineJoiner.add("Phone number:\t" + phoneNumber);
-        return description + lineJoiner.toString();
+        return lineJoiner.toString();
     }
 }
